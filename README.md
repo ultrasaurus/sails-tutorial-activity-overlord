@@ -116,3 +116,99 @@ add header and footer above and below <%- body ->
       </footer>
     </div>
 ```
+
+## User model
+
+```
+sails generate user
+```
+
+Creates two files
+- api/controllers/UserController.js
+- api/models/User.js
+
+Let's define a schema for our model -- we could add attributes dynamically on the client, but this allows us to add validations.  In this example, name and email are required, and email must be unique and in email format.
+
+vi app/models/User.js
+```
+  attributes: {
+  	
+  	name: {
+  		type: 'string',
+  		required: true
+  	},
+
+  	title: {
+  		type: 'string'
+  	},
+
+  	email: {
+  		type: 'string',
+  		email: true,
+  		required: true,
+  		unique: true
+  	},
+
+  	encryptedPassword: {
+  		type: 'string'
+  	}
+    
+  }
+```
+
+
+vi api/controllers/UserController.js
+```
+  'new': function (req, res) {
+  	res.view();
+  }
+```
+
+We can just dropp LESS files into linker/styles -- this pushes the page below the header
+vi assets/linker/styles/custom.less
+```
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+```
+
+also since we're using LESS we can define variables to use in our styles (maybe should be using Bootstrap LESS version?)
+
+
+mkdir views/user
+vi views/user/new.ejs
+```
+<h1>Sign Up Here</h1>
+
+```
+
+now go to:  http://localhost:1337/user/new
+to see the sign up page (or click the button we made on the home screen)
+
+Let's add a form:
+
+
+
+
+```
+<form action="/user/create" method="POST" class="form-signin">
+	<h2>Make an account</h2>
+
+	<input type="text" class="input-block-level" placeholder="your name" name="name">
+
+	<input type="text" class="input-block-level" placeholder="your title" name="title">
+	
+	<input type="text" class="input-block-level" placeholder="email address" name="email">
+	
+	<input type="password" class="input-block-level" placeholder="password" name="password">
+	
+	<input type="password" class="input-block-level" placeholder="password confirmation" name="confirmation">
+	<br />
+	
+	<input type="submit" class="btn btn-large btn-primary" value="Create User"/>
+	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+</form>
+```
+
+
