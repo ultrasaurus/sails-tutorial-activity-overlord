@@ -81,4 +81,38 @@ However, we want to load jquery before bootstrap, so we modify Gruntfile.js to e
 
 ```
 
+vi views/static/index.ejs
+```
+<div class="container">
+  <div class="jumbotron">
+    <h1>Activity Overlord</h1>
 
+    <h2>Tracking app activity better than the NSA since 1899.</h2>
+    <a href="/user/new" class="btn btn-lg btn-success">Sign up now!</a>
+  </div>
+</div>
+```
+
+vi views/layout.ejs
+
+add header and footer above and below <%- body ->
+```
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/"> activityOverlord</a>
+      </div>
+    </div>
+    
+    <%- body %>
+
+    <div class="container">
+      <hr>
+      <footer class="footer pull-right">
+        <div>
+          <div>based on a <a href="http://sailsjs.org/">sails tutorial</a> by irl nathan, with a bunch of help from cody, gabe, heather, mike, scott and zoli</div>
+        </div>
+      </footer>
+    </div>
+```
