@@ -32,6 +32,8 @@ npm-debug.log
 # misc / editors
 ########################
 *~
+*.swp
+*.swo
 *#
 .DS_STORE
 .netbeans
