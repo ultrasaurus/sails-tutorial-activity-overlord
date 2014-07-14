@@ -16,7 +16,7 @@
  */
 
 module.exports = {
-    
+
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to UserController)
@@ -26,6 +26,17 @@ module.exports = {
   // This loads the sign-up page --> view/user/new.ejs
   'new': function (req, res) {
   	res.view();
+  },
+
+  create: function(req, res, next) {
+    // Create a User with the params sent from
+    // the sign-up form --> new.ejs
+    User.create(req.params.all(), function userCreated(err, user) {
+
+      // If there's an error
+      if (err) return next(err);
+
+      res.json(user);
+    })
   }
-  
 };

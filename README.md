@@ -219,6 +219,42 @@ vi views/user/new.ejs
 </form>
 ```
 
+## Creating a User account
+[Episode 4](http://irlnathan.github.io/sailscasts/blog/2013/08/26/building-a-sails-application-ep4-creating-a-user-account/)
+
+```csrf``` (cross site request forgery) is ```false``` by default
+
+in ```config/csrf.js```, change to true:
+
+```
+module.exports.csrf = true;
+```
+
+This will protect our webapp from cross-site scripting attack once we open up the abilitiy to modify data with our API.
+
+we send this back to the server in ```views/user/new.js```
+
+```
+	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+```
+
+We write the ```create``` action in ```api/controllers/UserController.js```
+
+```
+  create: function(req, res, next) {
+    // Create a User with the params sent from
+    // the sign-up form --> new.ejs
+    User.create(req.params.all(), function userCreated(err, user) {
+
+      // If there's an error
+      if (err) return next(err);
+
+      res.json(user);
+    })
+  }
+```
+
+
 
 
 ##Questions
