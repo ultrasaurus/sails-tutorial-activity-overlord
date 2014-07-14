@@ -277,7 +277,7 @@ Create a flash message and inject it into the sign-up page.
 in ```/views/user/UserController.js``` we store the error in the request session object, which will be persistent across web pages (and clear it in the case of a success)
 
 ```
-  create: function(req, res, next) {
+  create: function(req, res) {
     // Create a User with the params sent from
     // the sign-up form --> new.ejs
     User.create(req.params.all(), function userCreated(err, user) {
@@ -406,6 +406,47 @@ $(document).ready(function(){
 
 });
 ```
+
+## Simple Show Page
+
+[Episode 7](http://irlnathan.github.io/sailscasts/blog/2013/08/28/building-a-sails-application-ep7-adding-a-show-action-a-dot-k-a-a-profile-page/)
+
+
+
+in ```/api/controllers/UserController.js```
+
+we'll do a redirect, isntead of just returning the json at the end of the ```create``` action
+```
+      res.redirect('/user/show/'+user.id);
+```
+
+create new controller action:
+
+```
+  show: function(req, res) {
+    User.findOne(req.param('id'), function foundUser(err, user) {
+      if (err || !user) return res.serverError(err);
+      res.view({user: user});
+    });
+  }
+```
+
+new file for the view:  ```/views/users/show.ejs```
+
+```
+<div class='container'>
+	<h1><%- user.name %> </h1>
+	<h3><%- user.title %> </h3>
+	<hr>
+	<h3>contact: <%- user.email %> </h3>
+
+	<a class="btn btn-medium btn-primary" href="/user/edit/<%= user.id %>">Edit</a>
+
+</div>
+
+```
+
+
 
 ##Questions
 

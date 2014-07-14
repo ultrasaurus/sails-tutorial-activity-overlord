@@ -28,7 +28,7 @@ module.exports = {
   	res.view();
   },
 
-  create: function(req, res, next) {
+  create: function(req, res) {
     // Create a User with the params sent from
     // the sign-up form --> new.ejs
     User.create(req.params.all(), function userCreated(err, user) {
@@ -39,7 +39,19 @@ module.exports = {
         };
         return res.redirect('/user/new');
       }
-      return res.json(user);
+
+      //return res.json(user);
+      res.redirect('/user/show/'+user.id);
     });
+  },
+
+  show: function(req, res) {
+    User.findOne(req.param('id'), function foundUser(err, user) {
+      if (err || !user) return res.serverError(err);
+      res.view({user: user});
+    });
+
+
   }
+
 };
