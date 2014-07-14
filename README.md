@@ -435,8 +435,8 @@ new file for the view:  ```/views/users/show.ejs```
 
 ```
 <div class='container'>
-	<h1><%- user.name %> </h1>
-	<h3><%- user.title %> </h3>
+	<h1><%= user.name %> </h1>
+	<h3><%= user.title %> </h3>
 	<hr>
 	<h3>contact: <%- user.email %> </h3>
 
@@ -445,6 +445,15 @@ new file for the view:  ```/views/users/show.ejs```
 </div>
 
 ```
+
+Note:
+```<%= %>``` will escape the text
+```<%- %>``` will put in executable HTML
+
+
+## More CRUD
+[Episode 8](http://irlnathan.github.io/sailscasts/blog/2013/08/28/building-a-sails-application-ep8-building-a-user-list/)
+
 
 
 
