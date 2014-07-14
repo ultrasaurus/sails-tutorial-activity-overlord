@@ -25,7 +25,9 @@ module.exports = {
 
   // This loads the sign-up page --> view/user/new.ejs
   'new': function (req, res) {
+    res.locals.flash = _.clone(req.session.flash);
   	res.view();
+    req.session.flash = {};
   },
 
   create: function(req, res, next) {
@@ -33,8 +35,14 @@ module.exports = {
     // the sign-up form --> new.ejs
     User.create(req.params.all(), function userCreated(err, user) {
 
-     if (err) return res.serverError(err);
-     else return res.json(user);
+      if (err) {
+        req.session.flash = {
+          err: err
+        };
+        return res.redirect('/user/new');
+      }
+      return res.json(user);
+      req.session.flash = {};
     });
   }
 };

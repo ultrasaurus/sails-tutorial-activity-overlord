@@ -274,7 +274,52 @@ Then only attributes defined in the schema will be returned.  Seems like encrypt
 
 Create a flash message and inject it into the sign-up page.
 
+in ```/views/user/UserController.js``` we store the error in the request session object, which will be persistent across web pages (and clear it in the case of a success)
 
+```
+  create: function(req, res, next) {
+    // Create a User with the params sent from
+    // the sign-up form --> new.ejs
+    User.create(req.params.all(), function userCreated(err, user) {
+
+      if (err) {
+        req.session.flash = {
+          err: err
+        };
+        return res.redirect('/user/new');
+      }
+      return res.json(user);
+      req.session.flash = {};
+    });
+  }
+```
+
+then we change the ```new``` method to make the error available to the view (after the redirect)
+
+```
+  'new': function (req, res) {
+    res.locals.flash = _.clone(req.session.flash);
+  	res.view();
+    req.session.flash = {};
+  },
+```
+
+next let's display the error in the view -- for now, we won't make it pretty, just show the object
+
+in ```views/user/new.js```
+
+```
+<form action="/user/create" method="POST" class="form-signin">
+	<h2>Sign Up Here</h2>
+
+	<% if(flash && flash.err) { %>
+		<ul class="alert alert-success">
+	<% Object.keys(flash.err).forEach(function(error) { %>
+		<li><%- JSON.stringify(flash.err[error]) %></li>
+	<% }) %>
+	</ul>
+	<% } %
+```
 
 ##Questions
 
