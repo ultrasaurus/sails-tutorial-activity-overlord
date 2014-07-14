@@ -254,6 +254,17 @@ We write the ```create``` action in ```api/controllers/UserController.js```
   }
 ```
 
+By default this will save everything from the form in the database, but we want just the fields that we've defined in the user model.
+
+in ```api/models/User.js``` set:
+
+```
+module.exports = {
+
+  schema: true,
+```
+
+Then only attributes defined in the schema will be returned.  Seems like encrypted password shouldn't be, but we're not defining it yet, so we'll get to that in a future episode.
 
 
 

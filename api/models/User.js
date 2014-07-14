@@ -8,8 +8,10 @@
 
 module.exports = {
 
+  schema: true,
+
   attributes: {
-  	
+
   	name: {
   		type: 'string',
   		required: true
@@ -29,7 +31,7 @@ module.exports = {
   	encryptedPassword: {
   		type: 'string'
   	}
-    
+
   }
 
 };
