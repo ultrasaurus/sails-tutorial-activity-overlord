@@ -318,8 +318,42 @@ in ```views/user/new.js```
 		<li><%- JSON.stringify(flash.err[error]) %></li>
 	<% }) %>
 	</ul>
-	<% } %
+	<% } %>
 ```
+
+## Creating a Policy and Adding Client-side Validation
+[Episode 6](http://irlnathan.github.io/sailscasts/blog/2013/08/28/building-a-sails-application-ep5-creating-a-policy-and-adding-client-side-validation/)
+
+in ```api/policies/flash.js```
+
+```
+module.exports = function(req, res, next) {
+
+ res.locals.flash = {};
+
+ if(!req.session.flash) return next();
+
+ res.locals.flash = _.clone(req.session.flash);
+
+ // clear flash
+ req.session.flash = {};
+
+ next();
+};
+
+```
+
+then in ```config/policies.js``` make it so all controllers go through the flash policy:
+
+```
+module.exports.policies = {
+
+  // Default policy for all controllers and actions
+  // (`true` allows public access)
+  '*': 'flash'
+```
+
+
 
 ##Questions
 
