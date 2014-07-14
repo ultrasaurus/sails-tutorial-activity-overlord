@@ -353,7 +353,59 @@ module.exports.policies = {
   '*': 'flash'
 ```
 
+## Client-side validation
 
+download [jquery-validation](http://jqueryvalidation.org/)
+and put into ```assets/linker/js```
+
+then edit ```Gruntfile.js``` to make sure it is loaded AFTER jquery
+
+```
+    'linker/js/jquery-1.11.1.js',
+    'linker/js/jquery.validate-1.13.0.min.js',
+
+    // All of the rest of your app scripts imported here
+    'linker/**/*.js'
+```
+
+and then add custom validation js, by creating a file (could be named anything)
+
+vi ```assets/linker/js/customValidate.js```
+
+```
+$(document).ready(function(){
+
+	// Validate
+	// http://bassistance.de/jquery-plugins/jquery-plugin-validation/
+	// http://docs.jquery.com/Plugins/Validation/
+	// http://docs.jquery.com/Plugins/Validation/validate#toptions
+
+		$('.form-signin').validate({
+	    rules: {
+	      name: {
+	        required: true
+	      },
+	      email: {
+	        required: true,
+	        email: true
+	      },
+	      password: {
+	      	minlength: 6,
+	        required: true
+	      },
+	      confirmation: {
+	      	minlength: 6,
+	      	equalTo: "#password"
+	      }
+	    },
+			success: function(element) {
+				element
+				.text('OK!').addClass('valid')
+			}
+	  });
+
+});
+```
 
 ##Questions
 
