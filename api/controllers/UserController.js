@@ -33,10 +33,8 @@ module.exports = {
     // the sign-up form --> new.ejs
     User.create(req.params.all(), function userCreated(err, user) {
 
-      // If there's an error
-      if (err) return next(err);
-
-      res.json(user);
-    })
+     if (err) return res.serverError(err);
+     else return res.json(user);
+    });
   }
 };

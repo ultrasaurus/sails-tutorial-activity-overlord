@@ -163,6 +163,9 @@ vi app/models/User.js
 ### Create New action
 
 vi api/controllers/UserController.js
+
+Note: new needs to be quoted since new is a reserved word in Javascript
+
 ```
   'new': function (req, res) {
   	res.view();
@@ -239,17 +242,16 @@ we send this back to the server in ```views/user/new.js```
 ```
 
 We write the ```create``` action in ```api/controllers/UserController.js```
+Note: below differs from the video, see: https://github.com/balderdashy/sails/issues/1153
 
 ```
-  create: function(req, res, next) {
+  create: function(req, res) {
     // Create a User with the params sent from
     // the sign-up form --> new.ejs
     User.create(req.params.all(), function userCreated(err, user) {
 
-      // If there's an error
-      if (err) return next(err);
-
-      res.json(user);
+     if (err) return res.serverError(err);
+     else return res.json(user);
     })
   }
 ```
@@ -265,6 +267,12 @@ module.exports = {
 ```
 
 Then only attributes defined in the schema will be returned.  Seems like encrypted password shouldn't be, but we're not defining it yet, so we'll get to that in a future episode.
+
+## Validation Errors
+
+[Episode 5](http://irlnathan.github.io/sailscasts/blog/2013/08/27/building-a-sails-application-ep4-handling-validation-errors-with-a-flash-message/)
+
+Create a flash message and inject it into the sign-up page.
 
 
 
