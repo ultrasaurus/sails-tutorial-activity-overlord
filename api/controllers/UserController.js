@@ -48,6 +48,7 @@ module.exports = {
   show: function(req, res) {
     User.findOne(req.param('id'), function foundUser(err, user) {
       if (err || !user) return res.serverError(err);  // !user should be 404
+      //res.json(user);
       res.view({user: user});
     });
   },
