@@ -212,7 +212,7 @@ vi views/user/new.ejs
 
 	<input type="text" class="input-block-level" placeholder="email address" name="email">
 
-	<input type="password" class="input-block-level" placeholder="password" name="password">
+	<input type="password" class="input-block-level" placeholder="password" name="password" id="password">
 
 	<input type="password" class="input-block-level" placeholder="password confirmation" name="confirmation">
 	<br />
@@ -455,10 +455,127 @@ Note:
 [Episode 8](http://irlnathan.github.io/sailscasts/blog/2013/08/28/building-a-sails-application-ep8-building-a-user-list/)
 
 
+more actions in ```/api/controllers/UserController.js```
+```
+  index: function(req, res) {
+    User.find(function foundUser(err, users) {
+      if (err) return res.serverError(err);
+      res.view({users: users});
+    });
+  },
+
+  // render the edit view (e.g. /views/edit.ejs)
+  edit: function (req, res) {
+
+    // Find the user from the id passed in via params
+    User.findOne(req.param('id'), function foundUser (err, user) {
+      if (err) return res.serverError(err);
+      if (!user) return res.serverError(err);
+
+      res.view({
+        user: user
+      });
+    });
+  },
+
+  // process the info from edit view
+  update: function (req, res) {
+    console.log(req.params.all());
+    User.update(req.param('id'), req.params.all(), function userUpdated (err) {
+      if (err) {
+        return res.redirect('/user/edit/' + req.param('id'));
+      }
+
+      res.redirect('/user/show/' + req.param('id'));
+    });
+  }
+```
+
+and corresponding views
+
+vi views/user/index.ejs (eek! a table!)
+```
+<div class="container">
+	<h3>Users</h3>
+	<table class='table'>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Title</th>
+			<th>Email</th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+
+
+		<% _.each(users, function(user) { %>
+		<tr data-id="<%= user.id %>" data-model="user">
+			<td><%= user.id %></td>
+			<td><%= user.name %></td>
+			<td><%= user.title %></td>
+			<td><%= user.email %></td>
+			<td><a href="/user/show/<%= user.id %>" class="btn btn-sm btn-primary">Show</a></td>
+			<td><a href="/user/edit/<%= user.id %>" class="btn btn-sm btn-warning">Edit</a></td>
+			<td><a href="/user/destroy/<%= user.id %>" class="btn btn-sm btn-danger">Delete</a></td>
+		</tr>
+
+		<% }) %>
+	</table>
+</div>
+```
+
+vi views/user/edit.ejs
+```
+	<form action="/user/update/<%= user.id %>" method="POST" class="form-signin">
+		<h2> Hey, you're editing a user... </h2>
+
+		<input value="<%= user.name %>" name="name" type="text" class="form-control"/>
+		<input value="<%= user.title %>" name="title" type="text" class="form-control"/>
+		<input value="<%= user.email %>" name="email" type="text" class="form-control"/>
+		<input type="submit" value="Proceed" class="btn btn-lg btn-primary btn-block"/>
+		<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+	</form>
+```
+
+## Delete Action
+[Episode 9](http://irlnathan.github.io/sailscasts/blog/2013/08/29/building-a-sails-application-ep9-deleting-a-user-account/)
+
+delete actions in ```/api/controllers/UserController.js```
+
+```
+  destroy: function (req, res) {
+
+    User.findOne(req.param('id'), function foundUser (err, user) {
+      if (err) return res.serverError(err);
+
+      if (!user) res.serverError(err); //('User doesn\'t exist.');
+
+      User.destroy(req.param('id'), function userDestroyed(err) {
+        if (err) return res.serverError(err);
+      });
+
+      res.redirect('/user');
+
+    });
+  }
+```
+
+edit view to use form instead of GET action (not actually required, but a good idea) in ```views/user/index.ejs```
+
+```
+			<td><form action="/user/destroy/<%= user.id %>" method="POST">
+				<input type="hidden" name="_method" value="delete"/>
+				<input type="submit" class="btn btn-sm btn-danger" value="Delete"/>
+				<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+			</form>
+```
+
 
 
 ##Questions
 
 * maybe should be using Bootstrap LESS version?
+* How do I return custom errors? (such as user doesn't exists in delete, edit & 404 for show)
 
 
