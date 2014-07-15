@@ -571,11 +571,44 @@ edit view to use form instead of GET action (not actually required, but a good i
 			</form>
 ```
 
+skipping Ep 10's mongo data store
 
+## Adding Encrypted Password for User Auth
+[Episode 11](http://irlnathan.github.io/sailscasts/blog/2013/08/30/building-a-sails-application-ep11-encrypting-passwords-with-bcrypt/)
+
+```npm install bcrypt --save```
+the ```--save``` option will modify package.json to add the dependency
+
+then in the model file: ```api/models/User.js```  we'll add a method which makes sure that we never return the encryptedPassword to the client and add a method which will use bcrypt to create an encrypted password before the record is saved.
+
+```
+    toJSON: function() {
+      console.log('toJSON');
+      var obj = this.toObject();
+      delete obj.encryptedPassword;
+      return obj;
+    }
+
+  },
+  beforeCreate: function (values, next) {
+
+    // This checks to make sure the password and password confirmation match before creating record
+    if (!values.password || values.password != values.confirmation) {
+      return next({err: ["Password doesn't match password confirmation."]});
+    }
+
+    require('bcrypt').hash(values.password, 10, function passwordEncrypted(err, encryptedPassword) {
+      if (err) return next(err);
+      values.encryptedPassword = encryptedPassword;
+      next();
+    });
+  }
+```
 
 ##Questions
 
 * maybe should be using Bootstrap LESS version?
 * How do I return custom errors? (such as user doesn't exists in delete, edit & 404 for show)
+* change password?  use bcrypt on edit as well?
 
 
