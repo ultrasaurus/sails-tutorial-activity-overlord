@@ -605,6 +605,13 @@ then in the model file: ```api/models/User.js```  we'll add a method which makes
   }
 ```
 
+skip Ep12, I already know how to use git
+
+## Sign-in Page, Sessions
+[Episode 13](http://irlnathan.github.io/sailscasts/blog/2013/09/01/building-a-sails-application-ep13-sign-in-page/)
+
+
+
 ##Questions
 
 * maybe should be using Bootstrap LESS version?
